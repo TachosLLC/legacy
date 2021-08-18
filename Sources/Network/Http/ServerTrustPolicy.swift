@@ -11,12 +11,12 @@
 
 import Foundation
 
+@available(iOS 10.0, *)
+@available(macOS 10.12, *)
 public enum ServerTrustPolicy {
     case `default`(checkHost: Bool)
     case certificates(certificates: [SecCertificate], checkChain: Bool, checkHost: Bool)
     case publicKeys(keys: [SecKey], checkChain: Bool, checkHost: Bool)
-    @available(iOS 10.0, *)
-    @available(macOS 10.12, *)
     case hpkp(hashes: Set<Data>, algorithms: [Hpkp.PublicKeyAlgorithm], checkChain: Bool, checkHost: Bool)
     case custom((_ serverTrust: SecTrust, _ host: String) -> Bool)
     case disabled
@@ -65,7 +65,6 @@ public enum ServerTrustPolicy {
 
                 return false
             case .hpkp(let hashes, let algorithms, let checkChain, let checkHost):
-                guard #available(iOS 10.0, macOS 10.12, *) else { return false }
                 return Hpkp.check(serverTrust: serverTrust, host: host, hashes: hashes, algorithms: algorithms,
                     checkChain: checkChain, checkHost: checkHost)
             case let .custom(closure):
@@ -97,7 +96,7 @@ public enum ServerTrustPolicy {
     }
 
     private func dataForCertificates(_ certificates: [SecCertificate]) -> [Data] {
-        return certificates.map { SecCertificateCopyData($0) as Data }
+        certificates.map { SecCertificateCopyData($0) as Data }
     }
 
     private func publicKeysForTrust(_ trust: SecTrust) -> [SecKey] {
@@ -137,10 +136,10 @@ public enum ServerTrustPolicy {
     }
 
     public static func publicKey(path: String) -> SecKey? {
-        return certificate(path: path).flatMap(publicKeyForCertificate)
+        certificate(path: path).flatMap(publicKeyForCertificate)
     }
 
     public static func publicKey(url: URL) -> SecKey? {
-        return certificate(url: url).flatMap(publicKeyForCertificate)
+        certificate(url: url).flatMap(publicKeyForCertificate)
     }
 }

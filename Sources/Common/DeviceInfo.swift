@@ -92,7 +92,7 @@ public struct DeviceInfo: CustomStringConvertible {
     }
 
     public var description: String {
-        return """
+        """
         DeviceInfo:
             machineName: \(machineName)
             machineDisplayName: \(machineDisplayName)
