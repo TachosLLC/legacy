@@ -19,17 +19,9 @@ open class NetworkImageView: UIImageView {
 
     open var imageUrl: URL? {
         didSet {
-            if oldValue != imageUrl {
+			if oldValue != imageUrl || image == nil {
                 update()
             }
-        }
-    }
-
-    override open func layoutSubviews() {
-        super.layoutSubviews()
-
-        if !loading && image == nil {
-            update()
         }
     }
 
@@ -38,7 +30,6 @@ open class NetworkImageView: UIImageView {
     private func update() {
         image = placeholder
 
-        guard bounds.width > 0.1 && bounds.height > 0.1 else { return }
         guard let imageLoader = imageLoader, let imageUrl = imageUrl else { return }
 
         loading = true
